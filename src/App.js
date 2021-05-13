@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import { client } from "./client";
+import Posts from './comps/Posts'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      Persons: [],
+    };
+  }
+
+  componentDidMount() {
+    client
+      .getEntries()
+      .then((res) => {
+        this.setState({ Persons: res.items });
+      })
+      .catch(console.log("error is there"));
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="container">
+          <header>
+            <div className="wrapper">
+              <span>React and Contentful By Sachin</span>
+            </div>
+          </header>
+          <main>
+            <div className="wrapper">
+              <Posts persons={this.state.Persons}/>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
